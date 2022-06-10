@@ -1,0 +1,109 @@
+---
+title: "Simple Workflow"
+author: "Gale Chen"
+date: "08/06/2022"
+output: html_document
+---
+
+# Introduction
+This tutorial shows how to download data from a public source, process data and do some simple statistical tests in a documented and reproducible manner.
+
+#Setting a working directory
+The working directory is the location where you store all your files of your project. You will need to change subdir.
+```{r}
+subdir <- "/22s_co-op/2022s_r_workshop_v1"
+data_dir <- paste0( Sys.getenv("HOME"), subdir)
+setwd(data_dir)
+getwd()
+```
+#Install libraries
+```{r}
+library(tidyverse)
+# You may need to run: install.packages("ggpubr")
+library("ggpubr")
+```
+
+# Getting your data
+You can use the wget command in the language bash to download the example sleep_data located in this ODF project: https://osf.io/k5s4f/
+```{bash}
+wget https://osf.io/r7p9t/download
+mv download sleep_data.csv
+```
+# Loading data
+```{r}
+# Loading in a dataframe from a .csv file. 
+sleep_df = read.csv("sleep_data.csv")
+# let's take a look at this data in a separate tab. 
+print(sleep_df)
+```
+
+# Dataframes 2: Subsetting dataframes. 
+For any decently complex dataframe, we will inevitably want to subset that dataframe. We may wish to extract only the columns that are important for our analysis, or we may wish to look at data that meets certain criteria. There are multiple ways to complete both tasks, but today we will be doing everything using R's built in subset function. 
+
+```{r}
+# We can use the subset() function to subset our table in two different ways:
+# 1. Using the select argument of the subset function to grab specific columns from the dataframe. 
+subset(sleep_df, select = c(name, vore, bodywt))
+# 2. Using the subset argument and a relational operator to grab rows that meet a specific criteria.  
+carni_sleep = subset(sleep_df, subset = (vore == "carni"))
+
+# We can also drop rows:
+insecti_herbi_sleep<-subset(sleep_df, vore!="omni" & vore != "carni")
+```
+
+# Dataframes 3: Analyzing and adding to dataframes.   
+Now that we understand how we can use subsetting to manipulate our data, let's learn how we can actually do something with that data. First, we are going to apply some of the functions we learned earlier to the columns of our sleep dataframe. 
+
+```{r}
+# calculating the average total sleep and the standard deviation of total sleep across different species.
+mean(sleep_df$sleep_total)
+sd(sleep_df$sleep_total)
+# calculating how long each species spends awake based on the sleep column. 
+awake = 24 - sleep_df$sleep_total
+# adding the awake column to our dataset. 
+sleep_df$awake = awake
+# After creating additional columns, we may want to save our altered dataframe to file using write.csv. 
+write.csv(sleep_df, "sleep_and_awake.csv", row.names = FALSE)
+```
+
+# Plotting 1: ggplot basics. 
+R has some pretty good built in plotting software, but today we are going to be using the ggplot2 package from tidyverse to make our plots. There are a variety of minor reasons that ggplot2 is superior to R's built in plotting software, but the main reason we will be using ggplot2 today is because it is much easier to create visually impressive plots using ggplot2. 
+
+At it's core, their are three main things we need to consider when creating a ggplot:
+```{r}
+# First we initialize a ggplot. 
+ggplot()
+#Second, we select the data to plot and add on aesthetic mappings. 
+ggplot(data = sleep_df, mapping = aes(x = sleep_total, y = sleep_rem))
+# Third, we add a geometric object (geom) to tell gplot what kind of plot to make.
+ggplot(data = sleep_df, mapping = aes(x = sleep_total, y = sleep_rem)) + 
+  geom_point()
+# let's look at another kind of graph. 
+# A boxplot that conveys the average brain wt for each feeding habit. 
+ggplot(data = sleep_df, mapping = aes(x = vore, y = sleep_rem)) + 
+  geom_boxplot()
+
+```
+
+# Simple statistical test
+Next, we will run a correlation test on sleep_total and sleep_rem data. However, to decide what test we will use, we will first check for normal distribution in the data.
+```{r}
+# Shapiro-Wilk normality test
+shapiro.test(sleep_df$sleep_total) # => p = 0.2143 (normal)
+shapiro.test(sleep_df$sleep_rem) # => p = 2.078e-05 (non normal)
+
+#QQ plot for testing normality
+ggqqplot(sleep_df$sleep_total, ylab = "sleep_total") # (normal)
+ggqqplot(sleep_df$sleep_rem, ylab = "sleep_rem") # (non normal)
+
+# Kendall rank correlation coefficient test is a non-parametric version of Pearson correlation
+res <- cor.test(sleep_df$sleep_total, sleep_df$sleep_rem, 
+                    method = "kendall")
+res
+# t is the t-test statistic value
+# df is the degrees of freedom
+# p-value is the significance level of the t-test
+# conf.int is the confidence interval of the correlation coefficient at 95%
+# sample estimates is the correlation coefficient
+```
+Our test results in a correlation coefficient of 0.59.
