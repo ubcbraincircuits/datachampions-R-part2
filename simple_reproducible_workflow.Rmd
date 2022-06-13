@@ -24,7 +24,7 @@ library("ggpubr")
 ```
 
 # Getting your data
-You can use the wget command in the language bash to download the example sleep_data located in this ODF project: https://osf.io/k5s4f/
+You can use the wget command in the language bash to download the example sleep_data located in this OSF project: https://osf.io/k5s4f/
 ```{bash}
 wget https://osf.io/r7p9t/download
 mv download sleep_data.csv
