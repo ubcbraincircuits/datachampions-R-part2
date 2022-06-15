@@ -11,20 +11,21 @@ This tutorial shows how to download data from a public source, process data and 
 #Setting a working directory
 The working directory is the location where you store all your files of your project. You will need to change subdir.
 ```{r}
-subdir <- "/22s_co-op/2022s_r_workshop_v1"
+subdir <- "/Documents/Github/datachamptions-R-part2"
 data_dir <- paste0( Sys.getenv("HOME"), subdir)
 setwd(data_dir)
 getwd()
 ```
 #Install libraries
 ```{r}
+# sudo apt install libcurl4-openssl-dev libssl-dev libxml2-dev
 library(tidyverse)
 # You may need to run: install.packages("ggpubr")
 library("ggpubr")
 ```
 
 # Getting your data
-You can use the wget command in the language bash to download the example sleep_data located in this ODF project: https://osf.io/k5s4f/
+You can use the wget command in the language bash to download the example sleep_data located in this OSF project: https://osf.io/k5s4f/
 ```{bash}
 wget https://osf.io/r7p9t/download
 mv download sleep_data.csv
