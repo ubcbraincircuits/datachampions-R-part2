@@ -17,9 +17,14 @@ setwd(data_dir)
 getwd()
 ```
 #Install libraries
+If you do not have ggpbur and tidyverse installed, you may need to run:
+```{r}
+install.packages("ggpubr")
+install.packages("tidyverse")
+```
+If you have already installed the tidyverse and ggpubr packages, load the libraries directly:
 ```{r}
 library(tidyverse)
-# You may need to run: install.packages("ggpubr")
 library("ggpubr")
 ```
 
