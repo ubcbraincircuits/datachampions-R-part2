@@ -16,12 +16,27 @@ data_dir <- paste0( Sys.getenv("HOME"), subdir)
 setwd(data_dir)
 getwd()
 ```
-#Install libraries
+#Install packages
+If you do not have tidyverse and ggpubr installed, please install them.
+```{bash}
+# Install required applications:
+sudo apt-get install -y libxml2-dev libcurl4-openssl-dev libssl-dev libv8-dev zlib1g-dev libblas-dev liblapack-dev
+sudo apt install cmake
+gcc --version
+g++ --version
+gfortran --version
+# Install what you are missing:
+sudo apt install gfortran
+# Install the packages:
+sudo R
+install.packages('tidyverse')
+install.packages('ggpubr')
+q()
+```
+
 ```{r}
-# sudo apt install libcurl4-openssl-dev libssl-dev libxml2-dev
 library(tidyverse)
-# You may need to run: install.packages("ggpubr")
-library("ggpubr")
+library(ggpubr)
 ```
 
 # Getting your data
