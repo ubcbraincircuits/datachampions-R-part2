@@ -167,3 +167,13 @@ plot(seq(-5,5,by=.1),tdistr,type = "l",main = "t distribution, paired test examp
 
 t.test(x,y,paired = TRUE, alternative = "l")
 ```
+
+# Example question.
+Perform a two sample t-test on our sample_1 and sample_2 vectors. Use the help() function to figure out how we can use the t.test function to do a two sample t-test. Please specify that the variances are equal for our 2 samples in this test. 
+
+```{r}
+# In order to make sure we are not breaking the assumptions of the t-test, I am going to quickly make a couple of samples for us. 
+sample_1 = rnorm(25, mean = 10, sd = 2.5)
+sample_2 = rnorm(50, mean = 13, sd = 2.5)
+t.test(sample_1, sample_2, var.equal = TRUE)
+```
