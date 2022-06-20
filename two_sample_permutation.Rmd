@@ -5,26 +5,39 @@ date: "20/06/2022"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+## Introduction to Permutation Tests
+https://faculty.washington.edu/kenrice/sisg/SISG-08-06.pdf
+https://statlab.github.io/permute/user/two-sample.html
+
+A permutation test is a statistical hypothesis test (i.e., it draws a conclusion on the veracity of the null hypothesis). On a basic level, it computes the distribution for any test statistic under the assumption that the null hypothesis is true. It then computes all possible values of the same test statistics from the observed data. Comparing the two values results in acceptance or rejection of the null hypothesis.
+????????
+
+This test can be used as an alternative to the two sample t test.
+
+## Two sample permutation test example
+In this example taken from https://cran.r-project.org/web/packages/coin/coin.pdf, we will use a two-sample permutation test.
+
+```{r}
+library("coin")
+## Two-sample problem
+dta <- data.frame( # create our example observed data
+y = rnorm(20), # generate 20 random numbers using a normal distribution.
+x = gl(2, 10) # generate factor levels. 2 levels in factor, 10 items/factor
+)
+## Exact Ansari-Bradley test: tests the equality of distributions of a numeric response variable in two or more independent groups against scale alternatives
+# y ~ x is our model formula. y is a numeric variable, x is our factor.
+# data = df containing variables in model formula
+at <- ansari_test(y ~ x, data = dta, distribution = "exact")
+## Support of the exact distribution of the Ansari-Bradley statistic
+supp <- support(at)
+## Density of the exact distribution of the Ansari-Bradley statistic
+dens <- dperm(at, x = supp)
+## Plotting the density
+plot(supp, dens, type = "s")
+## 95% quantile
+qperm(at, p = 0.95)
+## One-sided p-value
+pperm(at, q = statistic(at))
+## Random number generation
+rperm(at, n = 5)
 ```
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
