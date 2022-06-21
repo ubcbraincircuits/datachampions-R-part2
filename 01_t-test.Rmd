@@ -36,49 +36,9 @@ t.test(sample,mu = 10,alternative="g")
 # There are a lot of outputs, but for our purposes we want to focus on 
 # the p-value. 
 ```
-# just for funsies:  How often do we make a type I error?  
-It's easy to estimate for type I here.  We know mu.  Above. It's 10.
-
-So what's a type I error again?  H0 rejected when it's true.
-In our case H0 is true.
-let's generate a sample and do the test lots of times to see how often
-we reject H0.
-```{r}
-N_iter = 20000
-h_out = 0
-alpha = 0.05
-for (i in 1:N_iter){
-  x = rnorm(n, mean = 10, sd = 2.5)
-  p=t.test(x,mu = 10,alternative = "g")[["p.value"]]
-  if (p < alpha){
-  h_out = h_out+1
-  }
-  }
-# So what's the rate of type I error?
-
-h_out/N_iter
-
-# It should be close to our significance level!  If H0 is true and we
-# reject the Null we are out in the tail of distribution by chance.  And
-# alpha is the probability of that!
-```
-# Ok that's all for now.  Go back to slides.
-
 # Two sample T-test.
 ```{r}
-# First make 2 large samples using rnorm again. let's say 200 and 400 samples each. 
-# Call the variables x and y.The mean of x will be 10 and the mean of y will be 11. 
-# Set the standard deviation to 2.5 
-x = rnorm(170, mean = 10, sd = 2.5)
-y = rnorm(340, mean = 11, sd = 2.5)
-
-# Look at them using hist().
-
-hist(x)
-hist(y)
-
-# Very cute, but let's reduce the number of data points to make this a
-# little more messy, I mean realistic. Let's do sample sizes of x = 20 and y = 40 (same sd).
+#Let's do sample sizes of x = 20 and y = 40 (same sd).
 
 x = rnorm(20, mean = 10, sd = 2.5)
 y = rnorm(40, mean = 11, sd = 2.5)
@@ -122,18 +82,39 @@ plot(seq(-5,5,by=.1),tdistr,type = "l",main = "t distribution, 2 samp test examp
 # equal and that we want a "left" or "lesser" one-sided t-test. 
 t.test(x,y,var.equal=TRUE, alternative = "l")
 
-# Do the results of the t-test confirm your suspicions?
+# Do the results of the t-test confirm your intuition?
 
-# Note the test can also be done without assuming the variances are equal
-
-# In this case the t stat is a bit easier to calculate.  
-# No pooled sd. However this test is less accurate than 
-# a test made with the assumption of equal variances.
-t.test(x,y,var.equal=FALSE, alternative = "l")
-
-# Due to this approximation the test stat is only approximately t
-# distributed so you only get approximately alpha significance.
 ```
+# just for funsies:  How often do we make a type I error?  
+It's easy to estimate for type I here.  We know mu.  Above. It's 10.
+
+So what's a type I error again?  H0 rejected when it's true.
+In our case H0 is true.
+let's generate a sample and do the test lots of times to see how often
+we reject H0.
+
+```{r}
+N_iter = 20000
+h_out = 0
+alpha = 0.05
+for (i in 1:N_iter){
+  x = rnorm(n, mean = 10, sd = 2.5)
+  p=t.test(x,mu = 10,alternative = "g")[["p.value"]]
+  if (p < alpha){
+  h_out = h_out+1
+  }
+  }
+# So what's the rate of type I error?
+
+h_out/N_iter
+
+# It should be close to our significance level!  If H0 is true and we
+# reject the Null we are out in the tail of distribution by chance.  And
+# alpha is the probability of that!
+```
+
+# back to the slides!
+
 # Paired T-test
 ```{r}
 # Ok we need two samples again. Let's call them x and y again. 
