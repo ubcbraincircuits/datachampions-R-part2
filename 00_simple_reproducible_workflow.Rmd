@@ -12,7 +12,7 @@ This tutorial is meant to be run on Windows OS. Please ensure that you have Wind
 #Setting a working directory
 The working directory is the location where you store all your files of your project. You will need to change subdir to correspond to the directory your script and related files are stored.
 ```{r}
-subdir <- "/22s_co-op/2022s_r_workshop_v1"
+subdir <- "/Documents/GitHub/datachampions-R-part2"
 data_dir <- paste0( Sys.getenv("HOME"), subdir)
 setwd(data_dir)
 getwd()
