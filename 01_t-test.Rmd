@@ -118,8 +118,9 @@ h_out/N_iter
 # Paired T-test
 ```{r}
 # Ok we need two samples again. Let's call them x and y again. 
-# Set both sample sizes to 200. Set the mean of one of x to 10 and the mean of y to 11. 
+# Set both sample sizes to 20. Set the mean of one of x to 10 and the mean of y to 11. 
 # Standard deviation for both is 2.5
+n=20
 
 x = rnorm(n, mean = 10, sd = 2.5)
 y = rnorm(n, mean = 11, sd = 2.5)
@@ -149,12 +150,5 @@ plot(seq(-5,5,by=.1),tdistr,type = "l",main = "t distribution, paired test examp
 t.test(x,y,paired = TRUE, alternative = "l")
 ```
 
-# Example question.
-Perform a two sample t-test on our sample_1 and sample_2 vectors. Use the help() function to figure out how we can use the t.test function to do a two sample t-test. Please specify that the variances are equal for our 2 samples in this test. 
 
-```{r}
-# In order to make sure we are not breaking the assumptions of the t-test, I am going to quickly make a couple of samples for us. 
-sample_1 = rnorm(25, mean = 10, sd = 2.5)
-sample_2 = rnorm(50, mean = 13, sd = 2.5)
-t.test(sample_1, sample_2, var.equal = TRUE)
 ```
