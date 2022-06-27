@@ -5,9 +5,9 @@ date: '2022-06-20'
 ---
 #Load the data file
 ```{r}
-install.packages("coin")
+# install.packages("coin")
 library(coin)
-ants <- read.csv("C:/Users/sarah/Downloads/ants.csv")
+ants <- read.csv("C:/Users/scsc7/Documents/GitHub/datachampions-R-part2/ants.csv")
 ants$place <- factor(ants$place)
 print(ants)
 ```

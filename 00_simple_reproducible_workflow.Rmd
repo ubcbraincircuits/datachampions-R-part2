@@ -9,20 +9,22 @@ output: html_document
 This tutorial shows how to download data from a public source, process data and do some simple statistical tests in a documented and reproducible manner.
 This tutorial is meant to be run on Windows OS. Please ensure that you have Windows Subsystem for Linux (WSL) installed. You can find installation instructions here: https://docs.microsoft.com/en-us/windows/wsl/install.
 
-#Setting a working directory
-The working directory is the location where you store all your files of your project. You will need to change subdir to correspond to the directory your script and related files are stored.
-```{r}
-subdir <- "/Documents/GitHub/datachampions-R-part2"
-data_dir <- paste0( Sys.getenv("HOME"), subdir)
-setwd(data_dir)
-getwd()
-```
 #Install libraries
-If you do not have ggpbur and tidyverse installed, you may need to run:
+If you do not have here, ggpbur and tidyverse installed, you may need to run:
 ```{r}
+install.packages("here")
 install.packages("ggpubr")
 install.packages("tidyverse")
 ```
+
+#Setting a working directory
+The working directory is the location where you store all your files of your project. You will need to change subdir to correspond to the directory your script and related files are stored.
+```{r}
+library(here)
+setwd(here())
+getwd()
+```
+
 If you have already installed the tidyverse and ggpubr packages, load the libraries directly:
 ```{r}
 library(tidyverse)
