@@ -21,12 +21,12 @@ hist(sample)
 # Quickly remake the t distribution, by copying the code we used last time. 
 x = seq(-5,5,by = 0.001)
 tdistr = dt(x,n-1)
-plot(x,tdistr,type = "l",main = "t distribution",xlab = "t",ylab = "Porobability Density")
+plot(x,tdistr,type = "l",main = "t distribution",xlab = "t",ylab = "Probability Density")
 
 # what's our t value and where is it on the distribution?  What do you predict for the result of
 # the test?
 obs_t = (mean(sample)-10)/(sd(sample)/sqrt(length(sample)))
-
+plot(x,tdistr,type = "l",main = "t distribution",xlab = "t",ylab = "Probability Density") + polygon(c(x[x >= 1.73], max(x), 1.73), c(tdistr[x >= 1.73], 0, 0), col = "red")+ abline(v=obs_t, col="blue")
 # R's t-test function is called t.test. run help(t.test) to get a feel for the function.
 
 # do the t.test:
@@ -36,9 +36,49 @@ t.test(sample,mu = 10,alternative="g")
 # There are a lot of outputs, but for our purposes we want to focus on 
 # the p-value. 
 ```
+# just for funsies:  How often do we make a type I error?  
+It's easy to estimate for type I here.  We know mu.  Above. It's 10.
+
+So what's a type I error again?  H0 rejected when it's true.
+In our case H0 is true.
+let's generate a sample and do the test lots of times to see how often
+we reject H0.
+```{r}
+N_iter = 20000
+h_out = 0
+alpha = 0.05
+for (i in 1:N_iter){
+  x = rnorm(n, mean = 10, sd = 2.5)
+  p=t.test(x,mu = 10,alternative = "g")[["p.value"]]
+  if (p < alpha){
+  h_out = h_out+1
+  }
+  }
+# So what's the rate of type I error?
+
+h_out/N_iter
+
+# It should be close to our significance level!  If H0 is true and we
+# reject the Null we are out in the tail of distribution by chance.  And
+# alpha is the probability of that!
+```
+# Ok that's all for now.  Go back to slides.
+
 # Two sample T-test.
 ```{r}
-#Let's do sample sizes of x = 20 and y = 40 (same sd).
+# First make 2 large samples using rnorm again. let's say 200 and 400 samples each. 
+# Call the variables x and y.The mean of x will be 10 and the mean of y will be 11. 
+# Set the standard deviation to 2.5 
+x = rnorm(170, mean = 10, sd = 2.5)
+y = rnorm(340, mean = 11, sd = 2.5)
+
+# Look at them using hist().
+
+hist(x)
+hist(y)
+
+# Very cute, but let's reduce the number of data points to make this a
+# little more messy, I mean realistic. Let's do sample sizes of x = 20 and y = 40 (same sd).
 
 x = rnorm(20, mean = 10, sd = 2.5)
 y = rnorm(40, mean = 11, sd = 2.5)
@@ -82,45 +122,26 @@ plot(seq(-5,5,by=.1),tdistr,type = "l",main = "t distribution, 2 samp test examp
 # equal and that we want a "left" or "lesser" one-sided t-test. 
 t.test(x,y,var.equal=TRUE, alternative = "l")
 
-# Do the results of the t-test confirm your intuition?
+# Do the results of the t-test confirm your suspicions?
+s = seq(-5,5,by=.1)
+crit = abs(qt(p = 0.05, df = length(x)+length(y)-2))
+plot(s,tdistr,type = "l",main = "t distribution, 2 samp test example",xlab = "",ylab = "") + polygon(c(s[s <= -crit], -crit, -crit), c(tdistr[s <= -crit], 0, 0), col = "red") + abline(v=obs_t, col="blue")
 
+# Note the test can also be done without assuming the variances are equal
+
+# In this case the t stat is a bit easier to calculate.  
+# No pooled sd. However this test is less accurate than 
+# a test made with the assumption of equal variances.
+t.test(x,y,var.equal=FALSE, alternative = "l")
+
+# Due to this approximation the test stat is only approximately t
+# distributed so you only get approximately alpha significance.
 ```
-# just for funsies:  How often do we make a type I error?  
-It's easy to estimate for type I here.  We know mu.  Above. It's 10.
-
-So what's a type I error again?  H0 rejected when it's true.
-In our case H0 is true.
-let's generate a sample and do the test lots of times to see how often
-we reject H0.
-
-```{r}
-N_iter = 20000
-h_out = 0
-alpha = 0.05
-for (i in 1:N_iter){
-  x = rnorm(n, mean = 10, sd = 2.5)
-  p=t.test(x,mu = 10,alternative = "g")[["p.value"]]
-  if (p < alpha){
-  h_out = h_out+1
-  }
-  }
-# So what's the rate of type I error?
-
-h_out/N_iter
-
-# It should be close to our significance level!  If H0 is true and we
-# reject the Null we are out in the tail of distribution by chance.  And
-# alpha is the probability of that!
-```
-
-# back to the slides!
-
 # Paired T-test
 ```{r}
 # Ok we need two samples again. Let's call them x and y again. 
-# Set both sample sizes to 20. Set the mean of one of x to 10 and the mean of y to 11. 
+# Set both sample sizes to 200. Set the mean of one of x to 10 and the mean of y to 11. 
 # Standard deviation for both is 2.5
-n=20
 
 x = rnorm(n, mean = 10, sd = 2.5)
 y = rnorm(n, mean = 11, sd = 2.5)
@@ -143,6 +164,9 @@ obs_t = mean(the_diffs)/(sd(the_diffs)/sqrt(length(the_diffs)))
 tdistr = dt(seq(-5,5,by=.1),length(the_diffs)-1)
 plot(seq(-5,5,by=.1),tdistr,type = "l",main = "t distribution, paired test example",xlab = "",ylab = "")
 
+crit = abs(qt(p = 0.05, df = length(the_diffs)-1))
+plot(seq(-5,5,by=.1),tdistr,type = "l",main = "t distribution, paired test example",xlab = "",ylab = "") + polygon(c(s[s <= -crit], -crit, -5), c(tdistr[s <= -crit], 0, 0), col = "red") + abline(v=obs_t, col="blue")
+
 # What's our Ha?  Let's say that it is mean(x)<mean(y), so we need to look at a
 # rejection region in the left tail of the distribution.
 # Ok, do the test. It's t.test again but this time we are going to specify that they are paired. 
@@ -151,4 +175,48 @@ t.test(x,y,paired = TRUE, alternative = "l")
 ```
 
 
+```{r}
+# Here I made the variances equal. In practice if we are using a two
+# sample t test and allowing ourselves to assume equal variances then we
+# compute what is called the pooled standard deviation. 
+
+sp = ((length(x)-1)*sd(x)^2+(length(y)-1)*sd(y)^2)/(length(x)+length(y)-2)
+sp = sqrt(sp)
+
+# Then we need to think about our H0 for a moment.
+
+# Let's say our H0 is that the population means are equal.ie mean(x)=mean(y).
+# So we can calculate our t statistic as follows:
+  
+obs_t = (mean(x)-mean(y))/sqrt((sp^2)/length(x)+(sp^2)/length(y))
+
+# Now we need to think about our Ha.  Let's say we thought it might be the
+# case that mean(x) < mean(y), That means our t stat would be out there in the left
+# tail of the distribution.  Think about an extreme case where we would feel confident
+# in saying mean(x) < mean(y).  Imagine mean(x) was 0 and
+# mean(y) was 1000.  If the samples were large and xbar ~mean(x) and ybar ~mean(y) then
+# tstat would be large and negative! This means to the left.
+
+# Ok so what does our t distribution look like?  Where does our observed
+# value of t land?  What does that imply for our testing?
+
+tdistr = dt(seq(-5,5,by = .1),length(x)+length(y)-2)
+plot(seq(-5,5,by=.1),tdistr,type = "l",main = "t distribution, 2 samp test example",xlab = "",ylab = "")
+
+# Ok now use the t.test to perform a two-sample t-test. We do not need to set mu, instead we need to 
+# input both samples into t.test(). We also need to specify that the variances of our samples are 
+# equal and that we want a "left" or "lesser" one-sided t-test. 
+t.test(x,y,var.equal=TRUE, alternative = "l")
+
+# Do the results of the t-test confirm your suspicions?
+
+# Note the test can also be done without assuming the variances are equal
+
+# In this case the t stat is a bit easier to calculate.  
+# No pooled sd. However this test is less accurate than 
+# a test made with the assumption of equal variances.
+t.test(x,y,var.equal=FALSE, alternative = "l")
+
+# Due to this approximation the test stat is only approximately t
+# distributed so you only get approximately alpha significance.
 ```
