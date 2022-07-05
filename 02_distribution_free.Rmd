@@ -1,24 +1,67 @@
 ---
-title: "Permutation test"
+title: "Wilcoxon and permutation test"
 output: html_document
-date: '2022-06-20'
+date: '2022-06-23'
 ---
-#Load the data file
+
+# Install packages
 ```{r}
-# install.packages("coin")
+install.packages("coin")
 library(coin)
-ants <- read.csv("C:/Users/scsc7/Documents/GitHub/datachampions-R-part2/ants.csv")
-ants$place <- factor(ants$place)
-print(ants)
 ```
 
-# Wilcoxon rank-sum test
+# Load the data
+The data below come from Hogg & Tanis, example 8.4-6. It involves the weights of packaging from two companies selling the same product. We have 8 observations from each company, A and B. We would like to know if the distribution of weights is the same at each company. A quick boxplot reveals the data have similar spread but may be skew and non-normal. With such a small sample it might be dangerous to assume normality.
+
 ```{r}
-wilcox_test(colonies~place, data=ants, distribution="approximate")
+A <- c(117.1, 121.3, 127.8, 121.9, 117.4, 124.5, 119.5, 115.1)
+B <- c(123.5, 125.3, 126.5, 127.9, 122.1, 125.6, 129.8, 117.2)
+#A <- c(117.1, 121.3, 127.8)
+#B <- c(123.5, 125.3, 126.5)
+dat <- data.frame(weight = c(A,B), 
+                  company = rep(c("A","B"), each=8))
+dat$company <- factor(dat$company)
 ```
 
-#Permutation test
+# Perform the Wilcoxon test
+Now we run the Wilcoxon Rank Sum Test using the wilcox.test function. Again, the null is that the distributions are the same, and hence have the same median. The alternative is two-sided. We have no idea if one distribution is shifted to the left or right of the other.
+
 ```{r}
-oneway_test(colonies~place, data=ants, distribution="approximate")
+wilcox.test(weight ~ company, data = dat, exact = FALSE)
 ```
+
+First we notice the p-value is a little less than 0.05. Based on this result we may conclude the medians of these two distributions differ. The alternative hypothesis is stated as the “true location shift is not equal to 0”. That’s another way of saying “the distribution of one population is shifted to the left or right of the other,” which implies different medians.
+
+The Wilcoxon statistic is returned as W = 13. This is NOT an estimate of the difference in medians. This is actually the number of times that a package weight from company B is less than a package weight from company A.
+
+# Wilcoxon distribution
+```{r}
+x <- -1: (8*8 + 1)
+fx <- dwilcox(x, 8, 8)
+thresholdValue <- 0.05
+ix <- which(cumsum(fx) <= thresholdValue)
+tx <- ix[length(ix)]
+
+plot(x, fx, type = "h", col = "violet",
+     main =  "Probabilities (density) of Wilcoxon-Statist.(n=8, m=8)") + abline(v=13, col="blue")+ polygon(c(x[x <= tx], tx, tx), c(fx[x <= tx], 0, 0), col=rgb(1, 0, 0,0.5), border=NA) 
+
+layout(1) # set back
+```
+
+# Permutation test distribution
+```{r}
+at <- oneway_test(weight ~ company, data = dat, distribution= approximate(nresample = 10000))
+pvalue(at)
+
+supp <- support(at)
+dens <- dperm(at, x=supp)
+thresholdValue <- 0.05
+ix <- which(cumsum(dens) <= thresholdValue)
+tx <- supp[length(ix)]
+
+## Plotting the density
+plot(supp, dens, type="h")+ abline(v=pvalue(at), col="blue")+ 
+polygon(x=c(-4,-4,tx,tx), y=c(0,0.007,0.007,0), col="#FF990022", border=F)
+```
+
 
