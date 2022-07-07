@@ -3,15 +3,10 @@ title: "Wilcoxon and permutation test"
 output: html_document
 date: '2022-06-23'
 ---
-
-# Install packages
-```{r}
-install.packages("coin")
-library(coin)
-```
-
 # Load the data
 The data below come from Hogg & Tanis, example 8.4-6. It involves the weights of packaging from two companies selling the same product. We have 8 observations from each company, A and B. We would like to know if the distribution of weights is the same at each company. A quick boxplot reveals the data have similar spread but may be skew and non-normal. With such a small sample it might be dangerous to assume normality.
+
+Website: https://data.library.virginia.edu/the-wilcoxon-rank-sum-test/#:~:text=The%20impact%20of%20ties%20means,p%2Dvalue%20with%20ties%E2%80%9D.
 
 ```{r}
 A <- c(117.1, 121.3, 127.8, 121.9, 117.4, 124.5, 119.5, 115.1)
@@ -24,12 +19,8 @@ dat$company <- factor(dat$company)
 # Perform the Wilcoxon test
 Now we run the Wilcoxon Rank Sum Test using the wilcox.test function. Again, the null is that the distributions have the same mean. The alternative is two-sided. We have no idea if one distribution is shifted to the left or right of the other.
 
-By default, the wilcox.test function will calculate exact p-values if the samples contains less than 50 finite values and there are no ties in the values. Otherwise a normal approximation is used. To force the normal approximation, set exact = FALSE.
-
-When we use the normal approximation the phrase “with continuity correction” is added to the name of the test. A continuity correction is an adjustment that is made when a discrete distribution is approximated by a continuous distribution. The normal approximation is very good and computationally faster for samples larger than 50.
-
 ```{r}
-wilcox.test(weight ~ company, data = dat, exact = TRUE)
+wt = wilcox.test(weight ~ company, data = dat, exact = TRUE)
 ```
 
 First we notice the p-value is very close to 0.05, but still smaller. Based on this result, we may reject the null hypothesis. The alternative hypothesis is stated as the “true location shift is not equal to 0”. That’s another way of saying “the distribution of one population is shifted to the left or right of the other,” which implies different means.
@@ -42,17 +33,31 @@ Similarly to the t-test, we can plot the distribution of the W statistic. We can
 ```{r}
 x <- -1: (8*8 + 1) 
 # The p-value is calculated by determining the index for which the cumulative sum of fx exceeds 0.05. Therefore, we should be careful to index correctly on x as well.
-fx <- dwilcox(x, 8, 8)
-thresholdValue <- 0.025
-ix <- which(cumsum(fx) <= thresholdValue)
-tx <- x[length(ix)]
+
+fx <- dwilcox(x, 8, 8) # dwilcox is a builtin R function that determines the Wilcoxon distribution given the sizes of the two samples
+
+thresholdValue <- 0.025 # two-sided test since we want 0.025 as both ends
+
+ix <- which(cumsum(fx) <= thresholdValue) # cumulative sum is summing probabilities up to the edge of the rejection region in order to determine the p-value. However, the p-value will not be exact as it is a discrete distribution.
+
+tx <- x[length(ix)] # determines the maximum x-value for which the sum of probabilities is still under the threshold value
 
 # Plot the distribution, rejection region, and observed test statistic
 plot(x, fx, type = "h", col = "violet",
-     main =  "Probabilities (density) of Wilcoxon-Statist.(n=8, m=8)") + abline(v=13, col="blue")+ polygon(c(x[x <= tx], tx, tx), c(fx[x <= tx], 0, 0), col=rgb(1, 0, 0,0.5), border=NA) 
+     main =  "Probabilities (density) of Wilcoxon-Statist.(n=8, m=8)") + abline(v=wt$statistic, col="blue")+ polygon(c(x[x <= tx], tx, tx), c(fx[x <= tx], 0, 0), col=rgb(1, 0, 0,0.5), border=NA) 
 
 layout(1) 
 ```
+As shown in the example in the powerpoint slides, the wilcoxon distribution is discrete. This means we can calculate exact p-values or use a normal approximation.
+
+By default, the wilcox.test function will calculate exact p-values if the samples contains less than 50 finite values and there are no ties in the values. Otherwise a normal approximation is used. To force the normal approximation, set exact = FALSE.
+
+When we use the normal approximation the phrase “with continuity correction” is added to the name of the test. A continuity correction is an adjustment that is made when a discrete distribution is approximated by a continuous distribution. The normal approximation is very good and computationally faster for samples larger than 50.
+
+# Permutation testing
+
+Website: https://thomasleeper.com/Rcourse/Tutorials/permutationtests.html 
+Note: this website gives a pretty good explanation on permutation tests but the code may not be super accurate as it only resamples from one group
 
 An increasingly common statistical tool for constructing sampling distributions is the permutation test (or sometimes called a randomization test). Like bootstrapping, a permutation test builds - rather than assumes - sampling distribution (called the “permutation distribution”) by resampling the observed data. Specifically, we can “shuffle” or permute the observed data (e.g., by assigning different outcome values to each observation from among the set of actually observed outcomes). Unlike bootstrapping, we do this without replacement.
 
@@ -62,20 +67,18 @@ The same two groups of data can be investigated further using permutation testin
 
 As done above, we can plot the distribution of the permutation statistic. We can then identify the rejection regions as well as the observed test statistic value. 
 
-# Permutation testing
 ```{r}
 # Combine the data from group A and B 
 pooled <- c(A,B)
-#s1 <- sample(pooled, length(A), FALSE)
-#s2 <- sample(pooled, length(B), FALSE)
+nresamples <- 2000
 
 # Divide the combined data into two groups and calculate their difference in means 2000 times  
-dist <- replicate(2000, mean(sample(pooled, length(A), FALSE))-mean(sample(pooled, length(B), FALSE)))
+dist <- replicate(nresamples, mean(sample(pooled, length(A), FALSE))-mean(sample(pooled, length(B), FALSE)))
 
 # Plot the histogram
 histogram = hist(dist, xlim = c(-6, 6), col = "black", breaks = 100)
 thresholdValue <- 0.025
-ix <- which(cumsum(histogram$counts)/2000 <= thresholdValue)
+ix <- which(cumsum(histogram$counts)/nresamples <= thresholdValue)
 tx <- histogram$breaks[length(ix)]
 tx
 abline(v = mean(A)-mean(B), col = "blue", lwd = 2)
@@ -83,4 +86,3 @@ polygon(x=c(-6,-6,tx,tx), y=c(0,60,60,0), col="#FF990022", border=F)
 ```
 
 First we notice the original difference in means is inside the rejection region. Based on this result, we may reject the null hypothesis.  Our null hypothesis is that the two treatment groups do not differ on the outcome (i.e., that the outcome is observed independently of treatment assignment). That’s another way of saying that the two groups do differ in outcome which implies different means.
-
