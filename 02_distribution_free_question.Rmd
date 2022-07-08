@@ -20,7 +20,8 @@ dat$company <- factor(dat$company)
 Now we run the Wilcoxon Rank Sum Test using the wilcox.test function. Again, the null is that the distributions have the same mean. The alternative is two-sided. We have no idea if one distribution is shifted to the left or right of the other.
 
 ```{r}
-wt = wilcox.test(weight ~ company, data = dat, exact = TRUE)
+# Use help(wilcox.test) to determine the inputs for this function. You acn use ~ to specify the relationship between weight and company.
+wt = 
 ```
 
 First we notice the p-value is very close to 0.05, but still smaller. Based on this result, we may reject the null hypothesis. The alternative hypothesis is stated as the “true location shift is not equal to 0”. That’s another way of saying “the distribution of one population is shifted to the left or right of the other,” which implies different means.
@@ -70,9 +71,16 @@ As done above, we can plot the distribution of the permutation statistic. We can
 ```{r}
 # Combine the data from group A and B 
 pooled <- c(A,B)
-nresamples <- 2000
 
+# Try resampling the combined data from above. What are we trying to calculate here? Use help(sample) to get started.
+
+```
+
+Now that we've done one resample, we can do this over and over again as many times as needed using the replicate function. You can use help(replicate) to see what the function does. 
+
+```{r}
 # Divide the combined data into two groups and calculate their difference in means 2000 times  
+nresamples <- 2000
 dist <- replicate(nresamples, mean(sample(pooled, length(A), FALSE))-mean(sample(pooled, length(B), FALSE)))
 
 # Plot the histogram
