@@ -7,10 +7,10 @@ output: html_document
 
 # Introduction
 This tutorial shows how to download data from a public source, process data and do some simple statistical tests in a documented and reproducible manner.
-This tutorial is meant to be run on Windows OS. Please ensure that you have Windows Subsystem for Linux (WSL) installed. You can find installation instructions here: https://docs.microsoft.com/en-us/windows/wsl/install.
+To download the data from Open Science Framework, this tutorial uses the tool wget.  Getting wget working is Operating system dependent.  It will be installed by default or available through your package manager in linux.  In windows, please ensure that you have Windows Subsystem for Linux (WSL) installed. You can find installation instructions here: https://docs.microsoft.com/en-us/windows/wsl/install.  For mac os you can use homebrew which is a package manager and the easiest way to install wget on mac: https://brew.sh.
 
 #Install libraries
-If you do not have here, ggpbur and tidyverse installed, you may need to run:
+If you do not have here, ggpubr and tidyverse installed, you may need to run:
 ```{r}
 install.packages("here")
 install.packages("ggpubr")
