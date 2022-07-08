@@ -6,18 +6,18 @@ date: '2022-06-20'
 
 # One Sample T-test. 
 ```{r}
-# First set the sample size we are going to use when we draw our sample. Let's do a sample size of 20 and
-# call the variable n
-n = 20
+# First set the sample size we are going to use when we draw our sample. 
+n = 
 
 # Create a sample to use via the rnorm command. Call this variable "sample".
 # Give it a mean of 10 and a standard deviation of 2.5
+# Hint: use help(rnorm) to determine the inputs
+sample = 
+  
 # plot it in a histogram using hist()
-sample = rnorm(n, mean = 10, sd = 2.5)
 
-hist(sample)
 
-# Specify some x values
+# Specify the x values for which the t-distribution will be calculated for plotting
 x = seq(-5,5,by = 0.001)
 
 # Try making the t-distribution yourself. Use help(dt) for more information. Hint: the number of degree of freedom is n-1. Use the x specified above.
@@ -25,10 +25,12 @@ tdistr =
   
 # what's our t value and where is it on the distribution?  What do you predict for the result of
 # the test?
-# Hint: The formula for t is (mean(y)-10)/(sd(y)/sqrt(length(y))). What do we replace y with?
+# Hint: The formula for t is (mean(y)-10)/(sd(y)/sqrt(length(y))). What variable name do we replace y with?
 obs_t = 
 
+# To visualize the t distribution and see where our observed value of the test statistic falls, we make a plot where the rejection region is highlighted in red and our test statistic is labelled by a vertical blue line.
 plot(x,tdistr,type = "l",main = "t distribution",xlab = "t",ylab = "Probability Density") + polygon(c(x[x >= 1.73], max(x), 1.73), c(tdistr[x >= 1.73], 0, 0), col = "red")+ abline(v=obs_t, col="blue")
+
 # R's t-test function is called t.test. run help(t.test) to get a feel for the function.
 
 # do the t.test:
@@ -38,61 +40,6 @@ plot(x,tdistr,type = "l",main = "t distribution",xlab = "t",ylab = "Probability 
 
 # There are a lot of outputs, but for our purposes we want to focus on 
 # the p-value. 
-```
-
-# Two sample T-test.
-```{r}
-# Let's make sample sizes of x = 20 and y = 40 (use the same sd).
-
-x = 
-y = 
-  
-# Look at them using hist().
-
-```
-
-```{r}
-# Here I made the variances equal. In practice if we are using a two
-# sample t test and allowing ourselves to assume equal variances then we
-# compute what is called the pooled standard deviation. 
-
-# Calculate the pooled standard deviation by using the following formula
-# sp = sqrt(((length(a)-1)*sd(a)^2+(length(b)-1)*sd(b)^2)/(length(a)+length(b)-2))
-# Hint: what should you replace a and b with?
-sp = 
-
-# Then we need to think about our H0 for a moment.
-
-# Let's say our H0 is that the population means are equal.ie mean(x)=mean(y).
-# So we can calculate our t statistic:
-# Hint: the formula for t is (mean(a)-mean(b))/sqrt((sp^2)/length(a)+(sp^2)/length(b))
-  
-obs_t = 
-
-# Now we need to think about our Ha.  Let's say we thought it might be the
-# case that mean(x) < mean(y), That means our t stat would be out there in the left
-# tail of the distribution.  Think about an extreme case where we would feel confident
-# in saying mean(x) < mean(y).  Imagine mean(x) was 0 and
-# mean(y) was 1000.  If the samples were large and xbar ~mean(x) and ybar ~mean(y) then
-# tstat would be large and negative! This means to the left.
-
-# Ok so what does our t distribution look like?  Where does our observed
-# value of t land?  What does that imply for our testing?
-
-# Use dt to calculate the t-distribution
-# Hint: the number of degrees of freedom will be length(x)+length(y)-2. Use the s specified below.
-s = seq(-5,5,by=.1)
-tdistr = 
-
-crit = abs(qt(p = 0.05, df = length(x)+length(y)-2))
-plot(s,tdistr,type = "l",main = "t distribution, 2 samp test example",xlab = "",ylab = "") + polygon(c(s[s <= -crit], -crit, -crit), c(tdistr[s <= -crit], 0, 0), col = "red") + abline(v=obs_t, col="blue")
-
-# Ok now use the t.test to perform a two-sample t-test. We do not need to set mu, instead we need to 
-# input both samples into t.test(). We also need to specify that the variances of our samples are 
-# equal and that we want a "left" or "lesser" one-sided t-test. 
-t.test(x,y,var.equal=TRUE, alternative = "l")
-
-# Do the results of the t-test confirm your suspicions?
 ```
 
 # just for funsies:  How often do we make a type I error?  
@@ -123,14 +70,73 @@ h_out/N_iter
 ```
 # Ok that's all for now.  Go back to slides.
 
+
+# Two sample T-test.
+```{r}
+# Let's make sample sizes of x = 20 and y = 40. For x, use a mean of 10 and sd of 2.5. For y, use a mean of 11 and a sd of 2.5.
+# Hint: Use rnorm as we did for the 1-sample t-test above
+x = 
+y = 
+  
+# Look at them using hist().
+
+  
+```
+
+```{r}
+# Here I made the variances equal. In practice if we are using a two
+# sample t test and allowing ourselves to assume equal variances then we
+# compute what is called the pooled standard deviation. 
+
+# Calculate the pooled standard deviation by using the following formula
+# sp = sqrt(((length(a)-1)*sd(a)^2+(length(b)-1)*sd(b)^2)/(length(a)+length(b)-2))
+# Hint: what should you replace a and b with?
+sp = 
+
+# Then we need to think about our H0 for a moment.
+
+# Let's say our H0 is that the population means are equal.ie mean(x)=mean(y).
+# So we can calculate our t statistic:
+# Hint: the formula for t is (mean(a)-mean(b))/sqrt((sp^2)/length(a)+(sp^2)/length(b))
+  
+obs_t = 
+
+# Now we need to think about our Ha.  Let's say we thought it might be the
+# case that mean(x) < mean(y), That means our t stat would be out there in the left
+# tail of the distribution.  Think about an extreme case where we would feel confident
+# in saying mean(x) < mean(y).  Imagine mean(x) was 0 and
+# mean(y) was 1000.  If the samples were large and xbar ~mean(x) and ybar ~mean(y) then
+# tstat would be large and negative! This means to the left.
+
+# Ok so what does our t distribution look like?  Where does our observed
+# value of t land?  What does that imply for our testing?
+
+# Use dt to calculate the t-distribution as done above in the 1-sample t-test. Use help(dt) if needed.
+# Hint: the number of degrees of freedom will be length(x)+length(y)-2. Use the s specified below.
+s = seq(-5,5,by=.1)
+tdistr = 
+
+crit = abs(qt(p = 0.05, df = length(x)+length(y)-2))
+plot(s,tdistr,type = "l",main = "t distribution, 2 samp test example",xlab = "",ylab = "") + polygon(c(s[s <= -crit], -crit, -crit), c(tdistr[s <= -crit], 0, 0), col = "red") + abline(v=obs_t, col="blue")
+
+# Ok now use the t.test to perform a two-sample t-test. We do not need to set mu, instead we need to 
+# input both samples into t.test(). We also need to specify that the variances of our samples are 
+# equal and that we want a "left" or "lesser" one-sided t-test. 
+
+# Hint: use help(t.test) to determine inputs
+
+
+# Do the results of the t-test confirm your suspicions?
+```
+
 # Paired T-test
 ```{r}
 # Ok we need two samples again. Let's call them x and y again. 
-# Set both sample sizes to 200. Set the mean of one of x to 10 and the mean of y to 11. 
-# Standard deviation for both is 2.5
-
-x = rnorm(n, mean = 10, sd = 2.5)
-y = rnorm(n, mean = 11, sd = 2.5)
+# Set both sample sizes to 20. Set the mean of one of x to 10 and the mean of y to 11. 
+# Standard deviation for both is 2.5. Use help(rnorm) if needed.
+n = 
+x =
+y =
 
 # Ok, so what are our diffs? does the order matter? In this case our HA is that mean(x)<mean(y), so we 
 # are going to calculate the diffs with our expectation being that there will be a negative difference if the null is false. 
@@ -147,7 +153,7 @@ obs_t =
 # What does our t distribution look like? Where is our observed t value?
 # What's the likely outcome of our test?
 
-# Calculate the t dsitribution again using the s specified below. 
+# Calculate the t dsitribution again using the s specified below. Use help(dt) if needed.
 # Hint: the dof will be length(the_diffs) - 1
 s = seq(-5,5,by=.1)
 tdistr = 
@@ -162,9 +168,4 @@ plot(s, tdistr,type = "l",main = "t distribution, paired test example",xlab = ""
 t.test(x,y,paired = TRUE, alternative = "l")
 ```
 
-# Example question.
-Perform a two sample t-test on our sample_1 and sample_2 vectors. Use the help() function to figure out how we can use the t.test function to do a two sample t-test. Please specify that the variances are equal for our 2 samples in this test. 
-
-```{r}
-
-```
+ 
