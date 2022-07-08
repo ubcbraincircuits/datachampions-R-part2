@@ -14,13 +14,12 @@ the blood hemoglobin concentration. For the power and sample size
 calculations illustrated here the distribution of the outcome variable
 is characterized by its mean and standard deviation.
 
-
 ## Power for given sample size
 
-Aim: to compute the power of a study which aims to show a difference
+How can we compute the power of a study which aims to show a difference
 in means between group 1 (n=6) and group 2 (n=6) assuming that the
 magnitude of the difference is 0.3 units and the standard deviation is
-0.28 units.
+0.28 units?
 
 ```{r   }
 power.t.test(n=6,delta=0.3,sd=0.28,type="two.sample") 
@@ -30,15 +29,18 @@ Possible conclusion sentence:
 
 *The power of the study is 39% to detect a difference in means of 0.3 units.*
 
-# TODO: make the following an example for them to do instead.
+Is this power good enough? How can we increase the power?
+
 ## Sample size for a given power
 
-Aim: to compute the sample size needed to achieve a power of 90% in a
+How can we compute the sample size needed to achieve a power of 90% in a
 study which aims to show a difference in means between two independent
 groups assuming that the magnitude of the difference is 0.3 units and
 the standard deviation is 0.28 units.
 
 ```{r   }
+# TODO: Use the power.t.test() function to calculate the sample size needed to achieve a power of 90%, assuming that the magnitude of the difference is 0.3 units and the standard deviation is 0.28 units.
+help("power.t.test")
 power.t.test(power=0.9,delta=0.3,sd=0.28,type="two.sample") 
 ```
 
@@ -46,30 +48,28 @@ Possible conclusion sentence:
 
 *To reach a power of 90% the study should include at least 20 subjects in each group to detect a difference in means of 0.3 units.*
 
-
 # Plotting power against sample size
 
 The functions `power.prop.test` and `power.t.test` can compute the
 power for a sequence of sample sizes simultaneously.
 
-The following code shows how to make a graph which shows the increase
-of the power for a given sequence of sample sizes
+How would we plot the relationship between power and a given sequence of sample sizes for the above example?
 
-#TODO: have them plot power instead by creating some list of x values (sample sizes) and using power.t.test (so it's for a continuous example instead)
 ```{r   }
 samplesizes <- seq(from=10,to=200,by=10)
-power.samplesizes <- power.prop.test(n=samplesizes,p1=0.3,p2=0.55)$power
+# TODO: Use the power.t.test() function to compute the power of a sequence of sample sizes. Assume that the magnitude of difference is 0.3 unites and the standard deviation is 0.28 units. Then, use the plot() function to plot that relationship.
+power_samplesizes <- power.t.test(n=samplesizes,delta=0.3,sd=0.28)$power
 plot(samplesizes,
-     power.samplesizes,
+     power_samplesizes,
      xlim=c(0,200),
      xlab="Sample size",
      ylab="Expected power",
-     ylim=c(0,1),
+     ylim=c(0.5,1),
      type="b",
      col="darkorange",
      lwd=5,axes=FALSE)
 axis(1,at=c(0,50,100,150,200))
-axis(2,at=c(0,0.25,0.5,0.75,1),labels=paste(c(0,25,50,75,100),"%")) 
+axis(2,at=c(0.5,0.75,1),labels=paste(c(50,75,100),"%")) 
 ```
 
 Often the greatest concern is the magnitude of the expected difference
@@ -85,18 +85,18 @@ only 0.2 instead of 0.4.
 
 ```{r   }
 differences <- seq(from=0.1,to=2,by=0.1)
-samplesize.sd04 <- sapply(differences,
+samplesize_sd04 <- sapply(differences,
                           function(d){power.t.test(power=0.9,
                                                    delta=d,
                                                    sd=0.4,
                                                    type="two.sample")$n})
-samplesize.sd03 <- sapply(differences,
+samplesize_sd03 <- sapply(differences,
                           function(d){power.t.test(power=0.9,
                                                    delta=d,
                                                    sd=0.3,
                                                    type="two.sample")$n})
 plot(differences,
-     samplesize.sd04,
+     samplesize_sd04,
      xlim=c(0,2),
      xlab="Expected difference between groups",
      ylab="Required sample size",
@@ -104,7 +104,7 @@ plot(differences,
      type="b",
      col="darkblue",
      lwd=5,axes=FALSE)
-lines(differences, samplesize.sd03,col="turquoise",lwd=5,type="b")
+lines(differences, samplesize_sd03,col="turquoise",lwd=5,type="b")
 axis(1,at=c(0,0.2,0.5,1,1.5,2))
 axis(2,at=c(350,100,50,10,0))
 legend(x="topright",lwd=5,bty="n",legend=c("SD=0.4","SD=0.3"),col=c("darkblue","turquoise")) 
