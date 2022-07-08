@@ -7,6 +7,8 @@ binary.
 
 Retrieved from: https://publicifsv.sund.ku.dk/~tag/Teaching/share/R-tutorials/Basic-statistics/Power.html
 
+#TODO: Get rid of binary section. State in the comments the website we found this on and that there are examply for binary outcomes there so people can find it if they are interested.
+
 # Binary outcome
 
 Binary outcome means that every subject has either (1= event) or (0=
@@ -69,7 +71,7 @@ Possible conclusion sentence:
 
 *The power of the study is 39% to detect a difference in means of 0.3 units.*
 
-
+# TODO: make the following an example for them to do instead.
 ## Sample size for a given power
 
 Aim: to compute the sample size needed to achieve a power of 90% in a
@@ -94,6 +96,7 @@ power for a sequence of sample sizes simultaneously.
 The following code shows how to make a graph which shows the increase
 of the power for a given sequence of sample sizes
 
+#TODO: have them plot power instead by creating some list of x values (sample sizes) and using power.t.test (so it's for a continuous example instead)
 ```{r   }
 samplesizes <- seq(from=10,to=200,by=10)
 power.samplesizes <- power.prop.test(n=samplesizes,p1=0.3,p2=0.55)$power
