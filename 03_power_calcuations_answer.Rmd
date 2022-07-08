@@ -1,51 +1,10 @@
-
 # Introduction
 
 This tutorial shows how to perform power and sample size calculations
-in R for the case where the outcome variable is either continuous or
-binary.
+in R for continuous outcome variables. For those who are interested, the website below includes examples
+for binary outcomes.
 
 Retrieved from: https://publicifsv.sund.ku.dk/~tag/Teaching/share/R-tutorials/Basic-statistics/Power.html
-
-#TODO: Get rid of binary section. State in the comments the website we found this on and that there are examply for binary outcomes there so people can find it if they are interested.
-
-# Binary outcome
-
-Binary outcome means that every subject has either (1= event) or (0=
-no event). The event probability is the probability that a subject has
-the event. The aim is to show that two groups differ with respect to
-the event probability.
-
-
-## Power for given sample size
-
-Aim: to compute the power of a study to show a difference between
-group 1 (n=28) in which the event probability is 30% and group 2
-(n=28) in which the event probability is 55%.
-
-```{r   }
-power.prop.test(n=28,p1=0.3,p2=0.55) 
-```
-
-Possible conclusion sentence:
-
-*The power of a study which includes 28 subjects in each of two experimental groups to see a difference between the event probabilities is 48% under the assumption that the event probabilities are 30% in group 1 and 55% in group 2.*
-
-
-## Sample size for given power
-
-Aim: To compute the sample size of a study to show a difference
-between group 1 (n=28) in which the event probability is 30% and group
-2 (n=28) in which the event probability is 55% with a power of 80%.
-
-```{r   }
-power.prop.test(power=0.8,p1=0.3,p2=0.55) 
-```
-
-Possible conclusion sentence:
-
-*In order to achieve a power of 80% under the assumed event probabilities the study should include at least 61 subjects in each of the experimental groups.*
-
 
 # Continuous outcome
 
