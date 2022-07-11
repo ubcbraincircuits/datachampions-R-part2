@@ -113,7 +113,7 @@ obs_t =
 
 # Use dt to calculate the t-distribution as done above in the 1-sample t-test. Use help(dt) if needed.
 # Hint: the number of degrees of freedom will be length(x)+length(y)-2. Use the s specified below.
-s = seq(-5,5,by=.1)
+s = seq(-5,5,by=.001)
 tdistr = 
 
 crit = abs(qt(p = 0.05, df = length(x)+length(y)-2))
@@ -155,7 +155,7 @@ obs_t =
 
 # Calculate the t dsitribution again using the s specified below. Use help(dt) if needed.
 # Hint: the dof will be length(the_diffs) - 1
-s = seq(-5,5,by=.1)
+s = seq(-5,5,by=.001)
 tdistr = 
 
 crit = abs(qt(p = 0.05, df = length(the_diffs)-1))
