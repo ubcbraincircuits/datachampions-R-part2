@@ -4,7 +4,7 @@ output: html_document
 date: '2022-06-23'
 ---
 # Load the data
-The data below come from Hogg & Tanis, example 8.4-6. It involves the weights of packaging from two companies selling the same product. We have 8 observations from each company, A and B. We would like to know if the distribution of weights is the same at each company. A quick boxplot reveals the data have similar spread but may be skew and non-normal. With such a small sample it might be dangerous to assume normality.
+The data below come from Hogg & Tanis, example 8.4-6. It involves the weights of packaging from two companies selling the same product. We have 8 observations from each company, A and B. We would like to know if the distribution of weights shifted between the companies. A quick boxplot reveals the data have similar spread but may be skew and non-normal. With such a small sample it might be dangerous to assume normality.
 
 Website: https://data.library.virginia.edu/the-wilcoxon-rank-sum-test/#:~:text=The%20impact%20of%20ties%20means,p%2Dvalue%20with%20ties%E2%80%9D.
 
@@ -14,13 +14,14 @@ B <- c(123.5, 125.3, 126.5, 127.9, 122.1, 125.6, 129.8, 117.2)
 dat <- data.frame(weight = c(A,B), 
                   company = rep(c("A","B"), each=8))
 dat$company <- factor(dat$company)
+boxplot(weight ~ company, data = dat)
 ```
 
 # Perform the Wilcoxon test
 Now we run the Wilcoxon Rank Sum Test using the wilcox.test function. Again, the null is that the distributions have the same mean. The alternative is two-sided. We have no idea if one distribution is shifted to the left or right of the other.
 
 ```{r}
-# Use help(wilcox.test) to determine the inputs for this function. You acn use ~ to specify the relationship between weight and company.
+# Use help(wilcox.test) to determine the inputs for this function. You can use ~ to specify the relationship between weight and company.
 wt = wilcox.test(weight ~ company, data = dat, exact = TRUE)
 ```
 
@@ -46,8 +47,6 @@ tx <- x[length(ix)] # determines the maximum x-value for which the sum of probab
 # Plot the distribution, rejection region, and observed test statistic
 plot(x, fx, type = "h", col = "violet",
      main =  "Probabilities (density) of Wilcoxon-Statist.(n=8, m=8)") + abline(v=wt$statistic, col="blue")+ polygon(c(x[x <= tx], tx, tx), c(fx[x <= tx], 0, 0), col=rgb(1, 0, 0,0.5), border=NA) 
-
-layout(1) 
 ```
 As shown in the example in the powerpoint slides, the wilcoxon distribution is discrete. This means we can calculate exact p-values or use a normal approximation.
 
