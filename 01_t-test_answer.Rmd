@@ -74,8 +74,8 @@ obs_t = (mean(x)-mean(y))/sqrt((sp^2)/length(x)+(sp^2)/length(y))
 # Ok so what does our t distribution look like?  Where does our observed
 # value of t land?  What does that imply for our testing?
 
-tdistr = dt(seq(-5,5,by = .1),length(x)+length(y)-2)
-s = seq(-5,5,by=.1)
+s = seq(-5,5,by=.001)
+tdistr = dt(s,length(x)+length(y)-2)
 crit = abs(qt(p = 0.05, df = length(x)+length(y)-2))
 plot(s,tdistr,type = "l",main = "t distribution, 2 samp test example",xlab = "",ylab = "") + polygon(c(s[s <= -crit], -crit, -crit), c(tdistr[s <= -crit], 0, 0), col = "red") + abline(v=obs_t, col="blue")
 
@@ -139,9 +139,11 @@ obs_t = mean(the_diffs)/(sd(the_diffs)/sqrt(length(the_diffs)))
 # What does our t distribution look like? Where is our observed t value?
 # What's the likely outcome of our test?
 
-tdistr = dt(seq(-5,5,by=.1),length(the_diffs)-1)
+s=seq(-5,5,by=.001)
+  
+tdistr = dt(s,length(the_diffs)-1)
 crit = abs(qt(p = 0.05, df = length(the_diffs)-1))
-plot(seq(-5,5,by=.1),tdistr,type = "l",main = "t distribution, paired test example",xlab = "",ylab = "") + polygon(c(s[s <= -crit], -crit, -5), c(tdistr[s <= -crit], 0, 0), col = "red") + abline(v=obs_t, col="blue")
+plot(s,tdistr,type = "l",main = "t distribution, paired test example",xlab = "",ylab = "") + polygon(c(s[s <= -crit], -crit, -5), c(tdistr[s <= -crit], 0, 0), col = "red") + abline(v=obs_t, col="blue")
 
 # What's our Ha?  Let's say that it is mean(x)<mean(y), so we need to look at a
 # rejection region in the left tail of the distribution.
