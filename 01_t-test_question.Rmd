@@ -6,7 +6,7 @@ date: '2022-06-20'
 
 # One Sample T-test. 
 ```{r}
-# First set the sample size we are going to use when we draw our sample. 
+# First set the sample size we are going to use when we draw our sample. Use a sample size of 20. 
 n = 
 
 # Create a sample to use via the rnorm command. Call this variable "sample".
@@ -123,7 +123,7 @@ plot(s,tdistr,type = "l",main = "t distribution, 2 samp test example",xlab = "",
 # input both samples into t.test(). We also need to specify that the variances of our samples are 
 # equal and that we want a "left" or "lesser" one-sided t-test. 
 
-# Hint: use help(t.test) to determine inputs
+# Hint: use help(t.test) to determine inputs and use var.equal=TRUE
 
 
 # Do the results of the t-test confirm your suspicions?
@@ -165,7 +165,9 @@ plot(s, tdistr,type = "l",main = "t distribution, paired test example",xlab = ""
 # rejection region in the left tail of the distribution.
 # Ok, do the test. It's t.test again but this time we are going to specify that they are paired. 
 
-t.test(x,y,paired = TRUE, alternative = "l")
+# Hint: Use help(t.test) and paired = TRUE
+
+
 ```
 
  

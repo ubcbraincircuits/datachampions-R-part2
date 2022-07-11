@@ -40,7 +40,7 @@ fx <- dwilcox(x, 8, 8) # dwilcox is a builtin R function that determines the Wil
 
 thresholdValue <- 0.025 # two-sided test since we want 0.025 as both ends
 
-ix <- which(cumsum(fx) <= thresholdValue) # cumulative sum is summing probabilities up to the edge of the rejection region in order to determine the p-value. However, the edge of the rejection region might not be exactly at a significance level of 0.05 as the value of alpha will likely fall between the discrete values of the W distribution.
+ix <- which(cumsum(fx) <= thresholdValue) # cumulative sum is summing probabilities up to the edge of the rejection region (e.g. thresholdValue) in order to determine the rejection region. However, the edge of the rejection region might not be exactly at a significance level of 0.05 as the value of alpha will likely fall between the discrete values of the W distribution.
 
 tx <- x[length(ix)] # determines the maximum x-value for which the sum of probabilities is still under the threshold value
 
