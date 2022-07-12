@@ -36,7 +36,7 @@ Similarly to the t-test, we can plot the distribution of the W statistic. We can
 x <- -1: (8*8 + 1) 
 # The p-value is calculated by determining the index for which the cumulative sum of fx exceeds 0.05. Therefore, we should be careful to index correctly on x as well.
 
-fx <- dwilcox(x, 8, 8) # dwilcox is a builtin R function that determines the Wilcoxon distribution given the sizes of the two samples
+fx <- dwilcox(x, length(A), length(B)) # dwilcox is a builtin R function that determines the Wilcoxon distribution given the sizes of the two samples
 
 thresholdValue <- 0.025 # two-sided test since we want 0.025 as both ends
 
@@ -53,6 +53,8 @@ As shown in the example in the powerpoint slides, the wilcoxon distribution is d
 By default, the wilcox.test function will calculate exact p-values if the samples contains less than 50 finite values and there are no ties in the values. Otherwise a normal approximation is used. To force the normal approximation, set exact = FALSE.
 
 When we use the normal approximation the phrase “with continuity correction” is added to the name of the test. A continuity correction is an adjustment that is made when a discrete distribution is approximated by a continuous distribution. The normal approximation is very good and computationally faster for samples larger than 50.
+
+Now, we'll go back to the slides.
 
 # Permutation testing
 
