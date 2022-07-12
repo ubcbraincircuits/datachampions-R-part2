@@ -71,6 +71,7 @@ also show the required sample size when the standard deviation is
 only 0.2 instead of 0.4.
 
 ```{r   }
+# Run as whole block
 differences <- seq(from=0.1,to=2,by=0.1)
 samplesize_sd04 <- sapply(differences,
                           function(d){power.t.test(power=0.9,

@@ -90,7 +90,6 @@ histogram = hist(dist, xlim = c(-6, 6), col = "black", breaks = 100)
 thresholdValue <- 0.025
 ix <- which(cumsum(histogram$counts)/nresamples <= thresholdValue)
 tx <- histogram$breaks[length(ix)]
-tx
 abline(v = mean(A)-mean(B), col = "blue", lwd = 2)
 polygon(x=c(-6,-6,tx,tx), y=c(0,60,60,0), col="#FF990022", border=F)
 ```
