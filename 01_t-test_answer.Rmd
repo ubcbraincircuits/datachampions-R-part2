@@ -35,6 +35,32 @@ t.test(sample,mu = 10,alternative="g")
 # There are a lot of outputs, but for our purposes we want to focus on 
 # the p-value. 
 ```
+# just for funsies:  How often do we make a type I error?  
+It's easy to estimate for type I here.  We know mu.  Above. It's 10.
+
+So what's a type I error again?  H0 rejected when it's true.
+In our case H0 is true.
+let's generate a sample and do the test lots of times to see how often
+we reject H0.
+```{r}
+N_iter = 20000
+h_out = 0
+alpha = 0.05
+for (i in 1:N_iter){
+  x = rnorm(n, mean = 10, sd = 2.5)
+  p=t.test(x,mu = 10,alternative = "g")[["p.value"]]
+  if (p < alpha){
+  h_out = h_out+1
+  }
+  }
+# So what's the rate of type I error?
+
+h_out/N_iter
+
+# It should be close to our significance level!  If H0 is true and we
+# reject the Null we are out in the tail of distribution by chance.  And
+# alpha is the probability of that!
+```
 
 # Two sample T-test.
 ```{r}
@@ -87,32 +113,7 @@ t.test(x,y,var.equal=TRUE, alternative = "l")
 # Do the results of the t-test confirm your suspicions?
 ```
 
-# just for funsies:  How often do we make a type I error?  
-It's easy to estimate for type I here.  We know mu.  Above. It's 10.
 
-So what's a type I error again?  H0 rejected when it's true.
-In our case H0 is true.
-let's generate a sample and do the test lots of times to see how often
-we reject H0.
-```{r}
-N_iter = 20000
-h_out = 0
-alpha = 0.05
-for (i in 1:N_iter){
-  x = rnorm(n, mean = 10, sd = 2.5)
-  p=t.test(x,mu = 10,alternative = "g")[["p.value"]]
-  if (p < alpha){
-  h_out = h_out+1
-  }
-  }
-# So what's the rate of type I error?
-
-h_out/N_iter
-
-# It should be close to our significance level!  If H0 is true and we
-# reject the Null we are out in the tail of distribution by chance.  And
-# alpha is the probability of that!
-```
 # Ok that's all for now.  Go back to slides.
 
 # Paired T-test
@@ -150,14 +151,4 @@ plot(s,tdistr,type = "l",main = "t distribution, paired test example",xlab = "",
 # Ok, do the test. It's t.test again but this time we are going to specify that they are paired. 
 
 t.test(x,y,paired = TRUE, alternative = "l")
-```
-
-# Example question.
-Perform a two sample t-test on our sample_1 and sample_2 vectors. Use the help() function to figure out how we can use the t.test function to do a two sample t-test. Please specify that the variances are equal for our 2 samples in this test. 
-
-```{r}
-# In order to make sure we are not breaking the assumptions of the t-test, I am going to quickly make a couple of samples for us. 
-sample_1 = rnorm(25, mean = 10, sd = 2.5)
-sample_2 = rnorm(50, mean = 13, sd = 2.5)
-t.test(sample_1, sample_2, var.equal = TRUE)
 ```
